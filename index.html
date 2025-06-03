@@ -85,6 +85,16 @@
       font-weight: bold;
       color: #2b7a0b;
       font-size: 0.95rem;
+      white-space: pre-line;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 8px;
+      resize: none;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-family: 'Roboto', sans-serif;
     }
 
     footer {
@@ -119,6 +129,13 @@
       <h2>PIV – Punto de Inflexión</h2>
       <button onclick="ejecutarPIV()">Ejecutar Algoritmo</button>
       <div class="resultado" id="resultadoPIV"></div>
+    </div>
+
+    <div class="card">
+      <h2>💬 Consulta a la IA</h2>
+      <textarea id="mensajeIA" placeholder="Escribe tu pregunta..."></textarea>
+      <button onclick="consultarIA()">Enviar</button>
+      <div class="resultado" id="respuestaIA"></div>
     </div>
   </div>
 
@@ -214,6 +231,28 @@
       const valores = [4, 4, 1, 2, 4];
       const resultado = encontrarMinimo(valores);
       document.getElementById('resultadoPIV').textContent = `Resultado: ${resultado}`;
+    }
+
+    // --------- Consulta a la IA ---------
+    function consultarIA() {
+      const mensaje = document.getElementById("mensajeIA").value;
+      const respuestaIA = document.getElementById("respuestaIA");
+      respuestaIA.textContent = "Consultando IA...";
+
+      fetch('chat.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ mensaje })
+      })
+      .then(res => res.json())
+      .then(data => {
+        respuestaIA.textContent = data.respuesta || "Sin respuesta";
+      })
+      .catch(err => {
+        respuestaIA.textContent = "Error: " + err.message;
+      });
     }
   </script>
 </body>
