@@ -235,25 +235,30 @@
 
     // --------- Consulta a la IA ---------
     function consultarIA() {
-      const mensaje = document.getElementById("mensajeIA").value;
-      const respuestaIA = document.getElementById("respuestaIA");
-      respuestaIA.textContent = "Consultando IA...";
+  const mensaje = document.getElementById("mensajeIA").value;
+  const respuestaIA = document.getElementById("respuestaIA");
+  respuestaIA.textContent = "Consultando IA...";
 
-      fetch('chat.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ mensaje })
-      })
-      .then(res => res.json())
-      .then(data => {
-        respuestaIA.textContent = data.respuesta || "Sin respuesta";
-      })
-      .catch(err => {
-        respuestaIA.textContent = "Error: " + err.message;
-      });
-    }
+  fetch("https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta", {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer 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",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      inputs: mensaje
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    const salida = data?.generated_text || data?.[0]?.generated_text || "Respuesta no encontrada";
+    respuestaIA.textContent = salida;
+  })
+  .catch(err => {
+    respuestaIA.textContent = "Error: " + err.message;
+  });
+}
+
   </script>
 </body>
 </html>
